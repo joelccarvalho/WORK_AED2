@@ -6,7 +6,7 @@
 
 /*
 Projeto de AED2 - Padaria Bom Apetite
-Data: 01/05/2018 aaaa
+Data: 01/05/2018
 Contribuidores: 
 -> Joel Carvalho nº12607
 -> Fábio Gonçalves nº13025
@@ -18,6 +18,27 @@ typedef struct Aluno{
 	char nome[45];
 }Aluno;
 
+typedef struct Alimentos{
+	char nome[45];
+	float preco;
+	int stock;
+	struct Alimentos *proximo;
+} Alimentos;
+typedef struct Cliente{
+	char nome[45];
+	int NIF;
+	struct Cliente *proximo;
+} Cliente;
+
+/*typedef struct Alimentos_clientes{
+	char nome_cliente[45];
+	char nome_alimento[45];
+	int quantidade;
+	float preco;
+	//hora de compra
+	struct Alimentos_clientes *proximo;
+} Alimentos_clientes;
+*/
 void inserirElementosArray(int array[], int numElementos) 
 {
    int i;
@@ -291,10 +312,37 @@ void menuEstudos(){
 			printf("Opcao invalida! Tente novamente.\n");
 	}
 }
+void InserirAlimentos(Alimentos *tail, Alimentos *head){
+	char alimento[45];
+	float preco;
+	int stock;
+	Alimentos *aux = (Alimentos*)malloc(sizeof(Alimentos));
+	printf("Insira o alimento");
+	scanf("%s", alimento);
+	strcpy(aux->nome, alimento);
+	printf("Preço por unidade ");
+	scanf("%f", &preco);
+	aux->preco = preco;
+	printf("Em stock ");
+	scanf("%d", &stock);
+	aux->stock = stock;
+	aux->proximo = NULL;
+ 	if(head == NULL && tail == NULL){
+ 		head = tail = aux;
+ 		return;
+	 }
+	 tail->proximo = aux;
+	 tail = aux;
+	
+}
+
+void inserirCliente(){
+	
+}
 
 void menuPadaria(){
 	int opc;
-	
+
 	system("cls");
 	printf("\t\tPadaria/Pastelaria Bom Apetite \n");
 	puts("");
@@ -312,10 +360,13 @@ void menuPadaria(){
 	scanf("%d", &opc);
 	fflush(stdin);
 	
-	/*switch(opc){
+	switch(opc){
 		case 1:
-			break;	
+			break;
 		case 2:
+		//ver isto	//Node *tail = NULL;
+ 			//Node *head = NULL;
+			InserirAlimentos(tail,head);
 			break;	
 		case 3:
 			break;
@@ -329,11 +380,12 @@ void menuPadaria(){
 			break;	
 		case 8:
 			break;					
-		default:	
-	}*/
+		default: printf("Opção inválida");
+ }
 }
-
+int x = 0;
 void main() {
+	
 	int opc;
 	setlocale(LC_ALL, "Portuguese");
 	
