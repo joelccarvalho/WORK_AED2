@@ -40,8 +40,7 @@ typedef struct Cliente{
 	struct Alimentos_clientes *proximo;
 } Alimentos_clientes;
 */
-void inserirElementosArray(int array[], int numElementos) 
-{
+void inserirElementosArray(int array[], int numElementos) {
    int i;
    
    for (i = 0; i < numElementos; i++) {
@@ -49,8 +48,7 @@ void inserirElementosArray(int array[], int numElementos)
    }
 }
 
-void inserirElementosEstrutura(Aluno aluno[], int numElementos) 
-{
+void inserirElementosEstrutura(Aluno aluno[], int numElementos) {
    int i;
    
    for (i = 0; i < numElementos; i++) {
@@ -59,21 +57,18 @@ void inserirElementosEstrutura(Aluno aluno[], int numElementos)
    }
 }
 
-int compararQsortArray(const void *a, const void *b) 
-{ 
+int compararQsortArray(const void *a, const void *b) { 
     return *(int*)a-*(int*)b; 
 } 
 
-int compararQsortEstrutura(const void *a, const void *b) 
-{ 
+int compararQsortEstrutura(const void *a, const void *b) { 
     struct Aluno *aa = (struct Aluno *)a;
 	struct Aluno *ab = (struct Aluno *)b;
 	
 	return (aa->numero - ab->numero);
 } 
 
-void ordenarQsort(int numElementos, char* tipo)
-{	
+void ordenarQsort(int numElementos, char* tipo){	
 	int array[numElementos];
 	float inicioTempo, fimTempo, tempo;
 	Aluno alunos[numElementos];
@@ -97,8 +92,7 @@ void ordenarQsort(int numElementos, char* tipo)
 	printf("|%-20.20s|%-3.5f          |\n", "Qsort", tempo);
 }
 
-void ordenarPermutacao(int numElementos, char* tipo)
-{   
+void ordenarPermutacao(int numElementos, char* tipo){   
 	int i, j;
 	int array[numElementos];
 	float inicioTempo, fimTempo, tempo;
@@ -314,8 +308,7 @@ void menuEstudos(){
 	}
 }
 
-Alimentos *alocarAlimento()
-{
+Alimentos *alocarAlimento(){
 	Alimentos *novo = (Alimentos *) malloc(sizeof(Alimentos));
 	
 	if(!novo){
@@ -367,8 +360,7 @@ void InserirAlimentos(Alimentos *lista_alimentos){
 	} while(stricmp(optn, "N"));
 }
 
-void ListarAlimentos(Alimentos *lista_alimentos)
-{
+void ListarAlimentos(Alimentos *lista_alimentos){
 	printf("-------------------------------------------------\n");
 	printf("|%-20s|%-15s|%-10s|\n", "NOME", "PREÇO(EURO)", "STOCK");
 	printf("-------------------------------------------------\n");
@@ -486,11 +478,174 @@ void RemoverAlimento(Alimentos *lista_alimentos){
 	system("pause");
 }
 
-void InserirClientes(){
-	
+Cliente *alocarCliente(){
+	Cliente *novo = (Cliente*)malloc(sizeof(Cliente));
+
+	if (!novo) {
+		printf("Sem memoria disponivel!\n");
+		return;
+	}
+	else {
+
+		printf("Nome do Cliente: ");
+		gets(novo->nome);
+		fflush(stdin);
+		printf("NIF do Cliente: ");
+		scanf("%d", &novo->NIF);
+		fflush(stdin);
+
+		return novo;
+	}
 }
 
-void menuPadaria(Alimentos *lista_alimentos){
+void InserirClientes(Cliente *lista_clientes){
+	char optn[1];
+
+	do {
+
+		Cliente *novo_cliente = alocarCliente();
+		novo_cliente->proximo = NULL;
+
+		if (lista_clientes->proximo == NULL)
+		{
+			lista_clientes->proximo = novo_cliente;
+		}
+		else {
+			Cliente *aux = lista_clientes->proximo;
+
+			while (aux->proximo != NULL)
+			{
+				aux = aux->proximo;
+			}
+
+			aux->proximo = novo_cliente;
+		}
+
+		printf("\nDeseja inserir mais Clientes?\nS-SIM\nN-NÃO\n");
+		gets(optn);
+
+	} while (stricmp(optn, "N"));
+}
+
+ListarClientes(Cliente *lista_clientes){
+	printf("-------------------------------------------------\n");
+	printf("|NOME||NIF|");
+	printf("-------------------------------------------------\n");
+	
+	if(lista_clientes->proximo == NULL){
+		printf("|Sem alimentos disponíveis!\t\t\t|\n");
+		printf("-------------------------------------------------\n");
+		system("pause");
+		return;
+	}
+	
+	Cliente *temp;
+	temp = lista_clientes->proximo; // Evitar guardar lixo
+	
+	while(temp != NULL){
+		printf("|%s|%d\t|\n", temp->nome, temp->NIF);
+		temp = temp->proximo;
+	}
+	printf("-------------------------------------------------\n");
+	system("pause");
+}
+
+void ProcurarCliente(Cliente *lista_clientes){
+	int clienteProcurado;
+	int encontrado = 0;
+	
+	printf("NIF do Cliente a procurar: ");
+	scanf("%d", &clienteProcurado);
+	
+	printf("-------------------------------------------------\n");
+	printf("|%-20s|%-15s|%-10s|\n", "NOME", "NIF");
+	printf("-------------------------------------------------\n");
+	
+	if(lista_clientes->proximo == NULL){
+		printf("|Sem clientes disponíveis!\t\t\t|\n");
+		printf("-------------------------------------------------\n");
+		system("pause");
+		return;
+	}
+	
+	Cliente *temp = lista_clientes->proximo; 
+	
+	while(temp != NULL && !encontrado){
+		if(clienteProcurado == temp->NIF){
+			encontrado = 1;
+			printf("|%s  |%d|\n", temp->nome, temp->NIF);
+		}
+		temp = temp->proximo;
+	}
+	
+	if(!encontrado){
+		printf("|Alimento não encontrado! Tente novamente!\t|\n");
+	}
+	printf("-------------------------------------------------\n");
+	system("pause");
+}
+/*
+void RemoverCliente(Cliente *lista_clientes){
+	int clienteRemover;
+	int removido = 0;
+	Alimentos *anterior;
+	
+	printf("NIF do cliente a remover: ");
+	scanf("%d", &clienteRemover);
+	
+	printf("-------------------------------------------------\n");
+	printf("|%-20s|%-15s|%-10s|\n", "NOME", "NIF");
+	printf("-------------------------------------------------\n");
+	
+	if(lista_clientes->proximo == NULL){
+		printf("|Sem clientes disponíveis!\t\t\t|\n");
+		printf("-------------------------------------------------\n");
+		system("pause");
+		return;
+	}
+	
+	Cliente *temp = lista_clientes->proximo; 
+	
+	// Se for o primeiro elemento da lista
+	if(temp != NULL && temp->NIF == clienteRemover){
+		printf("|CLIENTE REMOVIDO COM SUCESSO!\t\t\t|\n");
+		printf("|%-20.20s|%d\t|\n", temp->nome, temp->NIF);
+		printf("-------------------------------------------------\n");
+		lista_clientes->proximo = temp->proximo;
+		free(temp);
+		system("pause");
+		return;
+	}
+	
+	// Se for o segundo ou mais elemento da lista
+	while(temp != NULL && !removido){
+		if(stricmp(alimentoRemover, temp->nome) == 0){
+			removido = 1;
+			printf("|ALIMENTO REMOVIDO COM SUCESSO!\t\t\t|\n");
+			printf("|%-20.20s|%-2.2f\t     |%-3d\t|\n", temp->nome, temp->preco, temp->stock);
+			printf("-------------------------------------------------\n");
+			system("pause");
+			break;
+		}
+		anterior = temp;
+		temp = temp->proximo;
+	}
+	
+	// Se encontrou o elemento a eliminar
+	if(temp != NULL){
+		free(temp);	
+		// Unir a lista
+		anterior->proximo = temp->proximo;
+	}
+	
+	if(!removido){
+		printf("|Alimento não encontrado! Tente novamente!\t|\n");
+	}
+	printf("-------------------------------------------------\n");
+	system("pause");
+}
+*/
+void menuPadaria(Alimentos *lista_alimentos, Cliente *lista_clientes){
 	int opc;
 
 	system("cls");
@@ -512,19 +667,19 @@ void menuPadaria(Alimentos *lista_alimentos){
 	
 	switch(opc){
 		case 1:
-			InserirClientes();
+			InserirClientes(lista_clientes);
 			break;
 		case 2:
 			InserirAlimentos(lista_alimentos);
 			break;	
 		case 3:
-			//ListarClientes();
+			ListarClientes(lista_clientes);
 			break;
 		case 4:
 			ListarAlimentos(lista_alimentos);
 			break;
 		case 5:
-			//ProcurarCliente();
+			ProcurarCliente(lista_clientes);
 			break;
 		case 6:
 			ProcurarAlimento(lista_alimentos);
@@ -544,6 +699,8 @@ void main() {
 	// Inicializar a lista
 	Alimentos *lista_alimentos = (Alimentos*) malloc(sizeof(Alimentos));
 	lista_alimentos->proximo = NULL;
+	Cliente *lista_clientes = (Cliente*)malloc(sizeof(Cliente));
+	lista_clientes->proximo = NULL;
 	int opc;
 	
 	setlocale(LC_ALL, "Portuguese");
@@ -554,10 +711,11 @@ void main() {
 		if (opc == 1) 
 			menuEstudos();
 		else if (opc == 2)
-			menuPadaria(lista_alimentos);
+			menuPadaria(lista_alimentos, lista_clientes);
 			
 	} while(opc != 0);
 	
 	system("cls");
 	printf("Volte sempre!!");
 }
+
