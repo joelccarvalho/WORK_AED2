@@ -5,7 +5,7 @@
 #include <string.h> 
 
 /*
-Projeto de AED2 - Padaria Bom Apetite
+Projeto de AED2 - Pastelaria/Padaria Bom Apetite
 Data: 01/05/2018
 Contribuidores: 
 -> Joel Carvalho nº12607
@@ -40,6 +40,158 @@ typedef struct Cliente{
 	struct Alimentos_clientes *proximo;
 } Alimentos_clientes;
 */
+
+// Assinaturas
+void inserirElementosArray(int array[], int numElementos);
+void inserirElementosEstrutura(Aluno aluno[], int numElementos);
+int compararQsortArray(const void *a, const void *b);
+int compararQsortEstrutura(const void *a, const void *b);
+void ordenarQsort(int numElementos, char* tipo);
+void ordenarPermutacao(int numElementos, char* tipo);
+void ordenaArray();
+void ordenaEstrutura();
+void procuraBinaria(int numElementos, char* tipo, int procurado);
+void procuraLinear(int numElementos, char* tipo, int procurado);
+void procuraArrays();
+int menuGeral();
+void menuEstudos();
+void menuPadaria(Alimentos *lista_alimentos, Cliente *lista_clientes);
+Alimentos *alocarAlimento();
+void inserirAlimentos(Alimentos *lista_alimentos);
+char *randomPalavra();
+Alimentos* inserirAlimentosRandom(Alimentos *lista_alimentos);
+void listarAlimentos(Alimentos *lista_alimentos);
+void procurarAlimento(Alimentos *lista_alimentos);
+void removerAlimento(Alimentos *lista_alimentos);
+Cliente *alocarCliente();
+void inserirClientes(Cliente *lista_clientes);
+Cliente* inserirClientesRandom(Cliente *lista_clientes);
+void listarClientes(Cliente *lista_clientes);
+void procurarCliente(Cliente *lista_clientes);
+void proximoCliente(Cliente *lista_clientes);
+
+void main(int argc, char *argv[]) {
+
+	// Inicializar as listas
+	Alimentos *lista_alimentos = (Alimentos*) malloc(sizeof(Alimentos));
+	lista_alimentos->proximo   = NULL;
+	Cliente *lista_clientes    = (Cliente*)malloc(sizeof(Cliente));
+	lista_clientes->proximo    = NULL;
+	int opc;
+	
+	setlocale(LC_ALL, "Portuguese");
+	
+	do {
+		opc = menuGeral();
+		
+		if (opc == 1) 
+			menuEstudos();
+		else if (opc == 2)
+			menuPadaria(lista_alimentos, lista_clientes);
+			
+	} while(opc != 0);
+	
+	system("cls");
+	printf("Volte sempre!!");
+}
+
+int menuGeral(){
+	int opc;
+	
+	system("cls");
+	printf("\n\n%55s","|---------------MENU PRINCIPAL---------------|\n"); 
+	printf("%9s %45s", "|", "|\n");
+	printf("\t|1- Realizar estudos\t\t\t     |\n");
+	printf("\t|2- Padaria/Pastelaria Bom Apetite\t     |\n");
+	printf("\t|0- Sair\t\t\t\t     |\n");
+	printf("%54s", "|--------------------------------------------|");
+	printf("\n\n\tEscolha o menu que pretende visualizar: ");
+	scanf("%d", &opc);
+	fflush(stdin);
+	
+	return opc;
+}
+
+void menuEstudos(){
+	int opc;
+	
+	system("cls");
+	printf("\n\n\t|---------------MENU ESTUDOS---------------|\n");
+	printf("%9s %43s", "|", "|\n");
+	printf("\t|1- Testar tempos de ordenação arrays\t   |\n");
+	printf("\t|2- Testar tempos de ordenação estruturas  |\n");
+	printf("\t|3- Testar tempos de procura arrays\t   |\n");
+	printf("\t|-> ((Prima qualquer tecla para voltar)) <-|\n");
+	printf("%52s", "|------------------------------------------|");
+	printf("\n\n\tEscolha o menu que pretende visualizar: ");
+	scanf("%d", &opc);
+	fflush(stdin);
+	
+	switch(opc){
+		case 1:
+			ordenaArray();
+			break;
+		case 2:
+			ordenaEstrutura();
+			break;	
+		case 3:
+			procuraArrays();
+			break;	
+		
+		default:	
+			printf("Opcao invalida! Tente novamente.\n");
+	}
+}
+
+void menuPadaria(Alimentos *lista_alimentos, Cliente *lista_clientes){
+	int opc;
+
+	system("cls");
+	printf("\n\n\t|---------------PADARIA/PASTELARIA BOM APETITE---------------|\n");
+	printf("%9s %61s", "|", "|\n");
+	printf("\t|1- Inserir Cliente\t\t\t\t\t     |\n");
+	printf("\t|2- Inserir Alimento\t\t\t\t\t     |\n");
+	printf("\t|3- Listar Clientes\t\t\t\t\t     |\n");
+	printf("\t|4- Listar Alimentos\t\t\t\t\t     |\n");
+	printf("\t|5- Procurar Cliente\t\t\t\t\t     |\n");
+	printf("\t|6- Procurar Alimento\t\t\t\t\t     |\n");
+	printf("\t|7- Próximo Cliente\t\t\t\t\t     |\n");
+	printf("\t|8- Remover Alimento\t\t\t\t\t     |\n");
+	printf("\t|----------> ((Prima qualquer tecla para voltar)) <----------|\n");
+	printf("%70s", "|------------------------------------------------------------|");
+	printf("\n\n\tEscolha o menu que pretende visualizar: ");
+	scanf("%d", &opc);
+	fflush(stdin);
+	
+	switch(opc){
+		case 1:
+			inserirClientes(lista_clientes);
+			break;
+		case 2:
+			inserirAlimentos(lista_alimentos);
+			break;	
+		case 3:
+			listarClientes(lista_clientes);
+			break;
+		case 4:
+			listarAlimentos(lista_alimentos);
+			break;
+		case 5:
+			procurarCliente(lista_clientes);
+			break;
+		case 6:
+			procurarAlimento(lista_alimentos);
+			break;
+		case 7:
+			proximoCliente(lista_clientes);
+			break;	
+		case 8:
+			removerAlimento(lista_alimentos);
+			break;					
+		default: printf("Opção inválida");
+ 	}
+}
+
 void inserirElementosArray(int array[], int numElementos) {
    int i;
    
@@ -260,54 +412,6 @@ void procuraArrays(){
 	system("pause");
 }
 
-int menuGeral(){
-	int opc;
-	
-	system("cls");
-	printf("\n\n\t\|---------------MENU PRINCIPAL---------------|\n"); 
-	puts("\t\|\t\t\t\t\t     |");
-	printf("\t|1- Realizar estudos\t\t\t     |\n");
-	printf("\t|2- Padaria/Pastelaria Bom Apetite\t     |\n");
-	printf("\t|0- Sair\t\t\t\t     |\n");
-	puts("\t|\--------------------------------------------|");
-	printf("\nEscolha o menu que pretende visualizar: ");
-	scanf("%d", &opc);
-	fflush(stdin);
-	
-	return opc;
-}
-
-void menuEstudos(){
-	int opc;
-	
-	system("cls");
-	printf("\n\n\t|---------------MENU ESTUDOS---------------|\n");
-	puts("\t\|\t\t\t\t\t   |");
-	printf("\t|1- Testar tempos de ordenação arrays\t   |\n");
-	printf("\t|2- Testar tempos de ordenação estruturas  |\n");
-	printf("\t|3- Testar tempos de procura arrays\t   |\n");
-	printf("\t|-> ((Prima qualquer tecla para voltar)) <-|\n");
-	puts("\t|\------------------------------------------|");
-	printf("\nEscolha o menu que pretende visualizar: ");
-	scanf("%d", &opc);
-	fflush(stdin);
-	
-	switch(opc){
-		case 1:
-			ordenaArray();
-			break;
-		case 2:
-			ordenaEstrutura();
-			break;	
-		case 3:
-			procuraArrays();
-			break;	
-		
-		default:	
-			printf("Opcao invalida! Tente novamente.\n");
-	}
-}
-
 Alimentos *alocarAlimento(){
 	Alimentos *novo = (Alimentos *) malloc(sizeof(Alimentos));
 	
@@ -331,7 +435,7 @@ Alimentos *alocarAlimento(){
 	}
 }
 
-void InserirAlimentos(Alimentos *lista_alimentos){
+void inserirAlimentos(Alimentos *lista_alimentos){
 	char optn[2];
 	
 	do{
@@ -354,13 +458,77 @@ void InserirAlimentos(Alimentos *lista_alimentos){
 			aux->proximo = novo_alimento;
 		}
 		 
-		 printf("\nDeseja inserir mais alimentos?\nS-SIM\nN-NÃO\n");
+		 printf("\nDeseja inserir mais alimentos?\nS-SIM(s)\nN-NÃO(n)\n");
 		 gets(optn);
 	 
 	} while(stricmp(optn, "N"));
 }
 
-void ListarAlimentos(Alimentos *lista_alimentos){
+char *randomPalavra() {
+  char *letras = malloc((4 + 1) * sizeof(char)); // Reservar espaço em memória para cada letra gerada
+  int i;
+  char consoantes[] = "bcdfghjlmnpqrstv"; // Consoantes mais usadas
+  char vogais[] = "aeiou";
+  
+  for (i = 0; i < 4; i++) {
+  	// Sortear letra para cada posição da nova palavra
+  	// Para ser palavra mais fáceis de leitura, para posições impares geramos uma cosoante e para posições pares geramos uma vogal
+  	if(i % 2 == 0)
+  	{
+    	letras[i] = consoantes[rand() % (strlen(consoantes))];
+	}
+    else
+    {
+    	letras[i] = vogais[rand() % (strlen(vogais))];
+	}
+  }
+  
+  return letras;
+}
+
+Alimentos* inserirAlimentosRandom(Alimentos *lista_alimentos){
+	
+	int i;
+	char *nome_alimento;
+	int randomAlimentos = 10;
+  	
+  	// Gerar alimentos sorteados e inserir na lista
+	for(i = 0; i < randomAlimentos; i++){
+		Alimentos *novo_alimento = (Alimentos *) malloc(sizeof(Alimentos));
+		nome_alimento = randomPalavra();
+		strcpy(novo_alimento->nome, nome_alimento);
+		novo_alimento->stock   = rand() % 20;
+		novo_alimento->preco   = (float)((rand()%5)/0.3) + 1; // Rand entre 0 e 4(Max = 13.33), + 1 para evitar produtos a custo zero
+		novo_alimento->proximo = NULL;
+		
+		if(lista_alimentos->proximo == NULL){
+			lista_alimentos->proximo = novo_alimento;
+		}
+		else {                    
+			Alimentos *aux = lista_alimentos->proximo;
+			
+			while(aux->proximo != NULL)
+			{
+				aux = aux->proximo;
+			}
+		
+			aux->proximo = novo_alimento;
+		}
+	}
+	
+	return lista_alimentos;
+}
+
+void listarAlimentos(Alimentos *lista_alimentos){
+	
+	int cont = 0, sem_stock = 0;
+	float preco_alto = 0, preco_baixo = 0;
+	
+	// Se a lista for vazia, insere alimentos random(para não usar ficheiros de gravação)
+	if(lista_alimentos->proximo == NULL){
+		lista_alimentos = inserirAlimentosRandom(lista_alimentos);
+	}
+	
 	printf("-------------------------------------------------\n");
 	printf("|%-20s|%-15s|%-10s|\n", "NOME", "PREÇO(EURO)", "STOCK");
 	printf("-------------------------------------------------\n");
@@ -368,6 +536,7 @@ void ListarAlimentos(Alimentos *lista_alimentos){
 	if(lista_alimentos->proximo == NULL){
 		printf("|Sem alimentos disponíveis!\t\t\t|\n");
 		printf("-------------------------------------------------\n");
+		printf("TOTAL: %d\n", cont);
 		system("pause");
 		return;
 	}
@@ -377,13 +546,34 @@ void ListarAlimentos(Alimentos *lista_alimentos){
 	
 	while(temp != NULL){
 		printf("|%-20.20s|%-2.2f\t     |%-3d\t|\n", temp->nome, temp->preco, temp->stock);
+		
+		cont++;
+		
+		if(temp->stock == 0){
+			sem_stock++;
+		}
+		
+		if(preco_alto < temp->preco){
+			preco_alto = temp->preco;
+		}
+		
+		preco_baixo = (cont == 1 ? preco_alto : preco_baixo);
+		
+		if(preco_baixo > temp->preco){
+			preco_baixo = temp->preco;
+		}
+		
 		temp = temp->proximo;
 	}
 	printf("-------------------------------------------------\n");
+	printf("TOTAL: %d\n", cont);
+	printf("PREÇO MAIS ELEVADO: %.2f Euro(s)\n", preco_alto);
+	printf("PREÇO MAIS BAIXO: %.2f Euro(s)\n", preco_baixo);
+	printf("Nº ALIMENTOS SEM STOCK: %d\n", sem_stock);
 	system("pause");
 }
 
-void ProcurarAlimento(Alimentos *lista_alimentos){
+void procurarAlimento(Alimentos *lista_alimentos){
 	char alimentoProcurado[45];
 	int encontrado = 0;
 	
@@ -418,7 +608,7 @@ void ProcurarAlimento(Alimentos *lista_alimentos){
 	system("pause");
 }
 
-void RemoverAlimento(Alimentos *lista_alimentos){
+void removerAlimento(Alimentos *lista_alimentos){
 	char alimentoRemover[45];
 	int removido = 0;
 	Alimentos *anterior;
@@ -498,7 +688,7 @@ Cliente *alocarCliente(){
 	}
 }
 
-void InserirClientes(Cliente *lista_clientes){
+void inserirClientes(Cliente *lista_clientes){
 	char optn[1];
 
 	do {
@@ -521,20 +711,60 @@ void InserirClientes(Cliente *lista_clientes){
 			aux->proximo = novo_cliente;
 		}
 
-		printf("\nDeseja inserir mais Clientes?\nS-SIM\nN-NÃO\n");
+		printf("\nDeseja inserir mais Clientes?\nS-SIM(s)\nN-NÃO(n)\n");
 		gets(optn);
 
 	} while (stricmp(optn, "N"));
 }
 
-ListarClientes(Cliente *lista_clientes){
+Cliente* inserirClientesRandom(Cliente *lista_clientes){
+	
+	int i;
+	char *palavra;
+	int randomClientes = 10;
+  	
+  	// Gerar clientes sorteados e inserir na lista
+	for(i = 0; i < randomClientes; i++){
+		Cliente *novo_cliente = (Cliente*) malloc(sizeof(Cliente));
+		palavra = randomPalavra();
+		strcpy(novo_cliente->nome, palavra);
+		novo_cliente->NIF     = rand() % 100000000 + 900000000; 
+		novo_cliente->proximo = NULL;
+		
+		if(lista_clientes->proximo == NULL){
+			lista_clientes->proximo = novo_cliente;
+		}
+		else {                    
+			Cliente *aux = lista_clientes->proximo;
+			
+			while(aux->proximo != NULL)
+			{
+				aux = aux->proximo;
+			}
+		
+			aux->proximo = novo_cliente;
+		}
+	}
+	
+	return lista_clientes;
+}
+
+void listarClientes(Cliente *lista_clientes){
+	int cont = 0;
+	
+	// Se a lista for vazia, insere clientes random(para não usar ficheiros de gravação)
+	if(lista_clientes->proximo == NULL){
+		lista_clientes = inserirClientesRandom(lista_clientes);
+	}
+	
 	printf("-------------------------------------------------\n");
-	printf("|NOME||NIF|");
+	printf("|%-25s|%-21s|\n", "NOME", "NIF");
 	printf("-------------------------------------------------\n");
 	
 	if(lista_clientes->proximo == NULL){
-		printf("|Sem alimentos disponíveis!\t\t\t|\n");
+		printf("|Sem clientes disponíveis!\t\t\t|\n");
 		printf("-------------------------------------------------\n");
+		printf("TOTAL: %d\n", cont);
 		system("pause");
 		return;
 	}
@@ -543,14 +773,16 @@ ListarClientes(Cliente *lista_clientes){
 	temp = lista_clientes->proximo; // Evitar guardar lixo
 	
 	while(temp != NULL){
-		printf("|%s|%d\t|\n", temp->nome, temp->NIF);
+		printf("|%-25s|%-21d|\n", temp->nome, temp->NIF);
+		cont++;
 		temp = temp->proximo;
 	}
 	printf("-------------------------------------------------\n");
+	printf("TOTAL: %d\n", cont);
 	system("pause");
 }
 
-void ProcurarCliente(Cliente *lista_clientes){
+void procurarCliente(Cliente *lista_clientes){
 	int clienteProcurado;
 	int encontrado = 0;
 	
@@ -558,7 +790,7 @@ void ProcurarCliente(Cliente *lista_clientes){
 	scanf("%d", &clienteProcurado);
 	
 	printf("-------------------------------------------------\n");
-	printf("|%-20s|%-15s|%-10s|\n", "NOME", "NIF");
+	printf("|%-25s|%-21s|\n", "NOME", "NIF");
 	printf("-------------------------------------------------\n");
 	
 	if(lista_clientes->proximo == NULL){
@@ -573,7 +805,7 @@ void ProcurarCliente(Cliente *lista_clientes){
 	while(temp != NULL && !encontrado){
 		if(clienteProcurado == temp->NIF){
 			encontrado = 1;
-			printf("|%s  |%d|\n", temp->nome, temp->NIF);
+			printf("|%-25s|%-21d|\n", temp->nome, temp->NIF);
 		}
 		temp = temp->proximo;
 	}
@@ -584,8 +816,8 @@ void ProcurarCliente(Cliente *lista_clientes){
 	printf("-------------------------------------------------\n");
 	system("pause");
 }
-/*
-void RemoverCliente(Cliente *lista_clientes){
+
+void proximoCliente(Cliente *lista_clientes){
 	int clienteRemover;
 	int removido = 0;
 	Alimentos *anterior;
@@ -594,7 +826,7 @@ void RemoverCliente(Cliente *lista_clientes){
 	scanf("%d", &clienteRemover);
 	
 	printf("-------------------------------------------------\n");
-	printf("|%-20s|%-15s|%-10s|\n", "NOME", "NIF");
+	printf("|%-25s|%-21s|\n", "NOME", "NIF");
 	printf("-------------------------------------------------\n");
 	
 	if(lista_clientes->proximo == NULL){
@@ -609,7 +841,7 @@ void RemoverCliente(Cliente *lista_clientes){
 	// Se for o primeiro elemento da lista
 	if(temp != NULL && temp->NIF == clienteRemover){
 		printf("|CLIENTE REMOVIDO COM SUCESSO!\t\t\t|\n");
-		printf("|%-20.20s|%d\t|\n", temp->nome, temp->NIF);
+		printf("|%-25s|%-21d|\n", temp->nome, temp->NIF);
 		printf("-------------------------------------------------\n");
 		lista_clientes->proximo = temp->proximo;
 		free(temp);
@@ -619,10 +851,10 @@ void RemoverCliente(Cliente *lista_clientes){
 	
 	// Se for o segundo ou mais elemento da lista
 	while(temp != NULL && !removido){
-		if(stricmp(alimentoRemover, temp->nome) == 0){
+		if(clienteRemover == temp->NIF){
 			removido = 1;
-			printf("|ALIMENTO REMOVIDO COM SUCESSO!\t\t\t|\n");
-			printf("|%-20.20s|%-2.2f\t     |%-3d\t|\n", temp->nome, temp->preco, temp->stock);
+			printf("|CLIENTE REMOVIDO COM SUCESSO!\t\t\t|\n");
+			printf("|%-25s|%-21d|\n", temp->nome, temp->NIF);
 			printf("-------------------------------------------------\n");
 			system("pause");
 			break;
@@ -639,83 +871,10 @@ void RemoverCliente(Cliente *lista_clientes){
 	}
 	
 	if(!removido){
-		printf("|Alimento não encontrado! Tente novamente!\t|\n");
+		printf("|Cliente não encontrado! Tente novamente!\t|\n");
 	}
 	printf("-------------------------------------------------\n");
 	system("pause");
 }
-*/
-void menuPadaria(Alimentos *lista_alimentos, Cliente *lista_clientes){
-	int opc;
 
-	system("cls");
-	printf("\t\tPadaria/Pastelaria Bom Apetite \n");
-	puts("");
-	printf("\t1- Inserir Cliente\n");
-	printf("\t2- Inserir Alimento\n");
-	printf("\t3- Listar Clientes\n");
-	printf("\t4- Listar Alimentos\n");
-	printf("\t5- Procurar Cliente\n");
-	printf("\t6- Procurar Alimento\n");
-	printf("\t7- Próximo Cliente\n");
-	printf("\t8- Remover Alimento\n");
-	printf("\tSelecione qualquer tecla para voltar ao menu anterior\n");
-	puts("");
-	printf("Escolha o menu que pretende visualizar: ");
-	scanf("%d", &opc);
-	fflush(stdin);
-	
-	switch(opc){
-		case 1:
-			InserirClientes(lista_clientes);
-			break;
-		case 2:
-			InserirAlimentos(lista_alimentos);
-			break;	
-		case 3:
-			ListarClientes(lista_clientes);
-			break;
-		case 4:
-			ListarAlimentos(lista_alimentos);
-			break;
-		case 5:
-			ProcurarCliente(lista_clientes);
-			break;
-		case 6:
-			ProcurarAlimento(lista_alimentos);
-			break;
-		case 7:
-			//ProximoCliente();
-			break;	
-		case 8:
-			RemoverAlimento(lista_alimentos);
-			break;					
-		default: printf("Opção inválida");
- }
-}
-
-void main() {
-
-	// Inicializar a lista
-	Alimentos *lista_alimentos = (Alimentos*) malloc(sizeof(Alimentos));
-	lista_alimentos->proximo = NULL;
-	Cliente *lista_clientes = (Cliente*)malloc(sizeof(Cliente));
-	lista_clientes->proximo = NULL;
-	int opc;
-	
-	setlocale(LC_ALL, "Portuguese");
-	
-	do {
-		opc = menuGeral();
-		
-		if (opc == 1) 
-			menuEstudos();
-		else if (opc == 2)
-			menuPadaria(lista_alimentos, lista_clientes);
-			
-	} while(opc != 0);
-	
-	system("cls");
-	printf("Volte sempre!!");
-}
 
