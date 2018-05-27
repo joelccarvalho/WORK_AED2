@@ -41,6 +41,12 @@ typedef struct Cliente{
 } Alimentos_clientes;
 */
 
+typedef struct Arvore{ 
+	int numero;
+	struct Arvore *esquerda;
+	struct Arvore *direita;
+} Arvore;
+
 // Assinaturas
 void inserirElementosArray(int array[], int numElementos);
 void inserirElementosEstrutura(Aluno aluno[], int numElementos);
@@ -53,6 +59,8 @@ void ordenaEstrutura();
 void procuraBinaria(int numElementos, char* tipo, int procurado);
 void procuraLinear(int numElementos, char* tipo, int procurado);
 void procuraArrays();
+Arvore* inserirArvore(struct Arvore* arvore);
+Arvore* guardarElementoArvore(struct Arvore* arvore, int num);
 int menuGeral();
 void menuEstudos();
 void menuPadaria(Alimentos *lista_alimentos, Cliente *lista_clientes);
@@ -95,6 +103,49 @@ void main(int argc, char *argv[]) {
 	printf("Volte sempre!!");
 }
 
+Arvore* guardarElementoArvore(struct Arvore* arvore, int num){
+		
+	if(arvore == NULL){
+		struct Arvore* arvore = (struct Arvore*) malloc(sizeof(Arvore));
+		arvore->numero = num;
+		arvore->esquerda = NULL;
+		arvore->direita = NULL;
+		return arvore;
+	}
+	
+	// Guardar elementos menores no ramo da esquerda
+	if(num < arvore->numero){
+		arvore->esquerda = guardarElementoArvore(arvore->esquerda, num);
+	}
+	else{
+		arvore->direita = guardarElementoArvore(arvore->direita, num);
+	}
+	
+	return arvore;
+}
+
+void listarArvore(struct Arvore* arvore, char* tipo){
+	
+	if(arvore != NULL)
+    {	
+    	if(stricmp(tipo, "inorder") == 0){
+			listarArvore(arvore->esquerda, tipo);
+	        printf("%d  ", arvore->numero);
+	        listarArvore(arvore->direita, tipo);
+		}
+		else if(stricmp(tipo, "preorder") == 0){
+	        printf("%d  ", arvore->numero);
+			listarArvore(arvore->esquerda, tipo);
+	        listarArvore(arvore->direita, tipo);
+		}
+		else if(stricmp(tipo, "postorder") == 0){
+			listarArvore(arvore->esquerda, tipo);
+	        listarArvore(arvore->direita, tipo);
+	        printf("%d  ", arvore->numero);
+		}
+    }
+}
+
 int menuGeral(){
 	int opc;
 	
@@ -112,8 +163,27 @@ int menuGeral(){
 	return opc;
 }
 
+Arvore* inserirArvore(struct Arvore* arvore){
+	
+	struct Arvore *numero;
+	int num;
+	
+	printf("\nInsira um número para a árvore: (Número negativo para parar)\n");
+	printf("->" );
+	scanf("%d", &num);
+	
+	while(num >= 0){
+  		arvore = guardarElementoArvore(arvore, num);
+		printf("->");
+  		scanf("%d", &num);
+	}
+	
+	return arvore;
+}
+
 void menuEstudos(){
 	int opc;
+	struct Arvore *arvore = NULL;
 	
 	system("cls");
 	printf("\n\n\t|---------------MENU ESTUDOS---------------|\n");
@@ -121,6 +191,7 @@ void menuEstudos(){
 	printf("\t|1- Testar tempos de ordenação arrays\t   |\n");
 	printf("\t|2- Testar tempos de ordenação estruturas  |\n");
 	printf("\t|3- Testar tempos de procura arrays\t   |\n");
+	printf("\t|4- Árvores\t\t\t\t   |\n");
 	printf("\t|-> ((Prima qualquer tecla para voltar)) <-|\n");
 	printf("%52s", "|------------------------------------------|");
 	printf("\n\n\tEscolha o menu que pretende visualizar: ");
@@ -136,10 +207,21 @@ void menuEstudos(){
 			break;	
 		case 3:
 			procuraArrays();
-			break;	
+			break;
+		case 4:
+			arvore = inserirArvore(arvore);
+			printf("\nListagem In Order:\n");
+			listarArvore(arvore, "inorder");
+			printf("\nListagem Pre Order:\n");
+			listarArvore(arvore, "preorder");
+			printf("\nListagem Post Order:\n");
+			listarArvore(arvore, "postorder");
+			printf("\n\n");
+			system("pause");
+			break;		
 		
 		default:	
-			printf("Opcao invalida! Tente novamente.\n");
+			printf("Opção inválida! Tente novamente.\n");
 	}
 }
 
@@ -523,12 +605,8 @@ void listarAlimentos(Alimentos *lista_alimentos){
 	
 	int cont = 0, sem_stock = 0;
 	float preco_alto = 0, preco_baixo = 0;
-	
-	// Se a lista for vazia, insere alimentos random(para não usar ficheiros de gravação)
-	if(lista_alimentos->proximo == NULL){
-		lista_alimentos = inserirAlimentosRandom(lista_alimentos);
-	}
-	
+	char optn[2];
+		
 	printf("-------------------------------------------------\n");
 	printf("|%-20s|%-15s|%-10s|\n", "NOME", "PREÇO(EURO)", "STOCK");
 	printf("-------------------------------------------------\n");
@@ -537,8 +615,22 @@ void listarAlimentos(Alimentos *lista_alimentos){
 		printf("|Sem alimentos disponíveis!\t\t\t|\n");
 		printf("-------------------------------------------------\n");
 		printf("TOTAL: %d\n", cont);
-		system("pause");
-		return;
+		
+		printf("Deseja inserir alimentos aletórios? (SIM(S) ou Qualquer opção): ");
+		scanf("%c", optn);
+		
+		// Se a lista for vazia e o utilizar quiser inserir alimentos aleatórios(para não usar ficheiros de gravação)
+		if(((!stricmp(optn, "S")) || (!stricmp(optn, "Sim")))){
+			system("cls");
+			printf("-------------------------------------------------\n");
+			printf("|%-20s|%-15s|%-10s|\n", "NOME", "PREÇO(EURO)", "STOCK");
+			printf("-------------------------------------------------\n");
+			
+			lista_alimentos = inserirAlimentosRandom(lista_alimentos);
+		}
+		else{
+			return;
+		}
 	}
 	
 	Alimentos *temp;
@@ -751,11 +843,7 @@ Cliente* inserirClientesRandom(Cliente *lista_clientes){
 
 void listarClientes(Cliente *lista_clientes){
 	int cont = 0;
-	
-	// Se a lista for vazia, insere clientes random(para não usar ficheiros de gravação)
-	if(lista_clientes->proximo == NULL){
-		lista_clientes = inserirClientesRandom(lista_clientes);
-	}
+	char optn[2];
 	
 	printf("-------------------------------------------------\n");
 	printf("|%-25s|%-21s|\n", "NOME", "NIF");
@@ -765,8 +853,22 @@ void listarClientes(Cliente *lista_clientes){
 		printf("|Sem clientes disponíveis!\t\t\t|\n");
 		printf("-------------------------------------------------\n");
 		printf("TOTAL: %d\n", cont);
-		system("pause");
-		return;
+		
+		printf("Deseja inserir clientes aletórios? (SIM(S) ou Qualquer opção): ");
+		scanf("%c", optn);
+		
+		// Se a lista for vazia e o utilizar quiser inserir clientes aleatórios(para não usar ficheiros de gravação)
+		if(((!stricmp(optn, "S")) || (!stricmp(optn, "Sim")))){
+			system("cls");
+			printf("-------------------------------------------------\n");
+			printf("|%-25s|%-21s|\n", "NOME", "NIF");
+			printf("-------------------------------------------------\n");
+			
+			lista_clientes = inserirClientesRandom(lista_clientes);
+		}
+		else{
+			return;
+		}
 	}
 	
 	Cliente *temp;
