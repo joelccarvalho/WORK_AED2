@@ -59,6 +59,7 @@ void ordenaEstrutura();
 void procuraBinaria(int numElementos, char* tipo, int procurado);
 void procuraLinear(int numElementos, char* tipo, int procurado);
 void procuraArrays();
+void insereFicheiro(Cliente *lista_clientes);
 Arvore* inserirArvore(struct Arvore* arvore);
 Arvore* guardarElementoArvore(struct Arvore* arvore, int num);
 int menuGeral();
@@ -572,7 +573,15 @@ Alimentos* inserirAlimentosRandom(Alimentos *lista_alimentos){
 	
 	int i;
 	char *nome_alimento;
-	int randomAlimentos = 10;
+	int randomAlimentos;
+	
+  	system("cls");
+  	printf("Quantos alimentos pretende inserir? ");
+  	scanf("%d", &randomAlimentos);
+  	
+	printf("-------------------------------------------------\n");
+	printf("|%-20s|%-15s|%-10s|\n", "NOME", "PREÇO(EURO)", "STOCK");
+	printf("-------------------------------------------------\n");
   	
   	// Gerar alimentos sorteados e inserir na lista
 	for(i = 0; i < randomAlimentos; i++){
@@ -775,14 +784,27 @@ Cliente *alocarCliente(){
 		printf("NIF do Cliente: ");
 		scanf("%d", &novo->NIF);
 		fflush(stdin);
+		
 
 		return novo;
 	}
 }
-
+void insereFicheiro(Cliente *lista_clientes){
+	FILE *fp = fopen("clientes.txt", "a+");
+	Cliente *temp;
+	temp = lista_clientes->proximo;	
+	while(temp != NULL){
+		fprintf(fp,"%s\n", temp->nome);
+		fprintf(fp,"%d\n", temp->NIF);
+		temp = temp->proximo;
+	}
+	
+	fclose(fp);
+	
+}
 void inserirClientes(Cliente *lista_clientes){
 	char optn[1];
-
+	char name[20];
 	do {
 
 		Cliente *novo_cliente = alocarCliente();
@@ -794,7 +816,6 @@ void inserirClientes(Cliente *lista_clientes){
 		}
 		else {
 			Cliente *aux = lista_clientes->proximo;
-
 			while (aux->proximo != NULL)
 			{
 				aux = aux->proximo;
@@ -802,10 +823,11 @@ void inserirClientes(Cliente *lista_clientes){
 
 			aux->proximo = novo_cliente;
 		}
+			insereFicheiro(lista_clientes);
 
 		printf("\nDeseja inserir mais Clientes?\nS-SIM(s)\nN-NÃO(n)\n");
 		gets(optn);
-
+		
 	} while (stricmp(optn, "N"));
 }
 
@@ -813,9 +835,17 @@ Cliente* inserirClientesRandom(Cliente *lista_clientes){
 	
 	int i;
 	char *palavra;
-	int randomClientes = 10;
+	int randomClientes;
+	
+  	system("cls");
+  	printf("Quantos clientes pretende inserir? ");
+  	scanf("%d", &randomClientes);
   	
-  	// Gerar clientes sorteados e inserir na lista
+	printf("-------------------------------------------------\n");
+	printf("|%-25s|%-21s|\n", "NOME", "NIF");
+	printf("-------------------------------------------------\n");
+	
+	// Gerar clientes sorteados e inserir na lista
 	for(i = 0; i < randomClientes; i++){
 		Cliente *novo_cliente = (Cliente*) malloc(sizeof(Cliente));
 		palavra = randomPalavra();
@@ -873,7 +903,6 @@ void listarClientes(Cliente *lista_clientes){
 	
 	Cliente *temp;
 	temp = lista_clientes->proximo; // Evitar guardar lixo
-	
 	while(temp != NULL){
 		printf("|%-25s|%-21d|\n", temp->nome, temp->NIF);
 		cont++;
